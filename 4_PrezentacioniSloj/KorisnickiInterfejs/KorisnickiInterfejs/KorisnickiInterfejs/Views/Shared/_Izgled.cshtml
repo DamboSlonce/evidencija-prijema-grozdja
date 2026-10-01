@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sr" lang="sr">
+<head>
+    <meta charset="utf-8" />
+    <title>Vinarija — evidencija prijema grožđa</title>
+    <link href="@Url.Content("~/Styles/Site.css?v=3")" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Validacija.js")"></script>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <div class="brand">
+                <div class="brand-mark">VP</div>
+                <div class="brand-text">
+                    <h1>Vinarija</h1>
+                    <p class="tagline">Evidencija prijema grožđa · TFZR · MVC</p>
+                </div>
+            </div>
+            <div class="loginDisplay">
+                @Html.ActionLink("ODJAVA", "Odjava", "Prijava")
+            </div>
+            <div class="clear hideSkiplink">
+                <div class="menu">
+                    <ul>
+                        <li>
+                            <a href="#">SORTE</a>
+                            <ul>
+                                <li>@Html.ActionLink("Tabelarni prikaz sorti", "Tabelarni", "Sorta")</li>
+                                <li>@Html.ActionLink("Unos sorte", "Unos", "Sorta")</li>
+                                <li>@Html.ActionLink("Izmena i brisanje sorti", "Izmena", "Sorta")</li>
+                                <li>@Html.ActionLink("Stampa spiska sorti", "Stampa", "Sorta", new { filter = "0" }, null)</li>
+                                <li>@Html.ActionLink("Parametarska stampa spiska sorti", "ParametarStampe", "Sorta")</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">PRIJEM GROŽĐA</a>
+                            <ul>
+                                <li>@Html.ActionLink("Spisak tura", "Spisak", "Tura")</li>
+                                <li>@Html.ActionLink("Unos ture", "Unos", "Tura")</li>
+                                <li>@Html.ActionLink("Master-detail unos prijema", "Unos", "Prijem")</li>
+                                <li>@Html.ActionLink("Master-detail prikaz prijema", "Prikaz", "Prijem")</li>
+                                <li>@Html.ActionLink("Stampa zapisnika", "Stampa", "Tura", new { filter = "0" }, null)</li>
+                                <li>@Html.ActionLink("Parametarska stampa zapisnika", "ParametarStampe", "Tura")</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            @RenderBody()
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="footer">
+        Razvoj višeslojnog softvera · Tehnički fakultet "Mihajlo Pupin" Zrenjanin · 2026.
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+@using System.Data
+@{
+    DataTable tabela = ViewBag.Tabela as DataTable;
+}
+<table class="data-table" style="width:100%">
+    <thead>
+        <tr>
+            <th>Oznaka</th>
+            <th>Broj prijema</th>
+            <th>Datum</th>
+            <th>Isporučilac</th>
+            <th>Sorta</th>
+            <th>Neto (kg)</th>
+            <th>Šećer (%)</th>
+            <th>Kiselost (g/l)</th>
+            <th>t (°C)</th>
+            <th>Oštećene (%)</th>
+            <th>Usmerenje</th>
+        </tr>
+    </thead>
+    <tbody>
+@if (tabela != null)
+{
+    foreach (DataRow red in tabela.Rows)
+    {
+        string usmerenje = red["Usmerenje"] == null ? "" : red["Usmerenje"].ToString();
+        string css = usmerenje.IndexOf("destilat", StringComparison.OrdinalIgnoreCase) >= 0 ? "row-destilat" : "row-kvalitet";
+        string datum = "";
+        if (red["DatumPrijema"] is DateTime)
+        {
+            datum = ((DateTime)red["DatumPrijema"]).ToString("dd.MM.yyyy");
+        }
+        else
+        {
+            datum = red["DatumPrijema"].ToString();
+        }
+        <tr class="@css">
+            <td>@red["Oznaka"]</td>
+            <td>@red["BrojPrijema"]</td>
+            <td>@datum</td>
+            <td>@red["Isporucilac"]</td>
+            <td>@red["NazivSorte"]</td>
+            <td>@red["NetoMasaKg"]</td>
+            <td>@red["SecerProcenat"]</td>
+            <td>@red["KiselostGl"]</td>
+            <td>@red["TemperaturaC"]</td>
+            <td>@red["UdeoOstecenihProcenat"]</td>
+            <td>@usmerenje</td>
+        </tr>
+    }
+}
+    </tbody>
+</table>

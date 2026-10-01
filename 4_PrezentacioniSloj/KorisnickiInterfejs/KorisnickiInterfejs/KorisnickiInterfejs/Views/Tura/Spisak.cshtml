@@ -1,0 +1,16 @@
+@model KorisnickiInterfejs.Models.TuraUnosViewModel
+@{
+    string filter = ViewBag.Filter as string ?? "";
+}
+<div class="page-title">Spisak tura — zapisnik o prijemu grožđa</div>
+<div class="toolbar">
+    @using (Html.BeginForm("Spisak", "Tura", FormMethod.Post))
+    {
+        <text>Isporučilac</text>
+        <input type="text" name="Filter" value="@filter" />
+        <button type="submit" name="akcija" value="filtriraj">FILTRIRAJ</button>
+        <button type="submit" name="akcija" value="svi">SVI</button>
+        <button type="submit" name="akcija" value="stampa">STAMPA</button>
+    }
+</div>
+@Html.Partial("_TabelaTura")

@@ -1,0 +1,173 @@
+USE [VP2026Vinarija]
+GO
+
+CREATE PROCEDURE [DajKorisnikaPoKorisnickomImenuISifri]
+( @KorisnickoIme nvarchar(20),
+@Sifra nvarchar(30)
+)
+AS
+select * from Korisnik where Korisnik.KorisnickoIme=@KorisnickoIme and Korisnik.Sifra=@Sifra
+GO
+
+
+CREATE PROCEDURE [DajSveSorte]
+AS
+select * from Sorta
+GO
+
+CREATE PROCEDURE [DajSortuPoNazivu]
+( @NazivSorte nvarchar(40)
+)
+AS
+select * from Sorta where Sorta.Naziv = @NazivSorte
+GO
+
+
+CREATE PROCEDURE [DajSortuPoSifri]
+(@SifraSorte nvarchar(3)
+)
+AS
+select * from Sorta where Sorta.Sifra = @SifraSorte
+GO
+
+CREATE PROCEDURE [DajBrojTuraPremaSifriSorte]
+(@SifraSorte nvarchar(3)
+)
+AS
+select count(*) as ukupno from Tura where Tura.SifraSorte = @SifraSorte
+GO
+
+
+
+CREATE PROCEDURE [DodajNovuSortu]
+( 
+@Sifra nvarchar(3),
+@Naziv nvarchar(40)
+)
+AS
+BEGIN
+Insert into Sorta(Sifra, Naziv) values (@Sifra, @Naziv)
+END
+GO
+
+CREATE PROCEDURE [ObrisiSortu](
+@Sifra nvarchar(3))
+AS
+BEGIN
+Delete from Sorta where Sifra=@Sifra
+END
+GO
+
+CREATE PROCEDURE [IzmeniSortu](
+@StaraSifra nvarchar(3),
+@Sifra nvarchar(3),
+@Naziv nvarchar(40)
+)
+AS
+BEGIN
+Update Sorta set Sifra=@Sifra, Naziv=@Naziv where Sifra=@StaraSifra
+END
+GO
+
+CREATE PROCEDURE [DajSveTure]
+AS
+Select * from Tura
+GO
+
+CREATE PROCEDURE [DajSveTureSaJoin] 
+AS
+Select Tura.Oznaka, Tura.BrojPrijema, Tura.DatumPrijema, Tura.Isporucilac, Sorta.Naziv as NazivSorte,
+Tura.NetoMasaKg, Tura.SecerProcenat, Tura.KiselostGl, Tura.TemperaturaC, Tura.UdeoOstecenihProcenat, Tura.Usmerenje
+from Tura inner join Sorta on Tura.SifraSorte = Sorta.Sifra
+GO
+
+CREATE PROCEDURE [DajTuruPoIsporuciocu] @Isporucilac nvarchar(80)
+AS
+select TURA.Oznaka, TURA.BrojPrijema, TURA.DatumPrijema, TURA.Isporucilac, SORTA.Naziv as NazivSorte,
+TURA.NetoMasaKg, TURA.SecerProcenat, TURA.KiselostGl, TURA.TemperaturaC, TURA.UdeoOstecenihProcenat, TURA.Usmerenje
+from TURA inner join SORTA on SORTA.Sifra = TURA.SifraSorte where TURA.Isporucilac = @Isporucilac
+GO
+
+CREATE PROCEDURE [DajTuruPoOznaci] @OznakaTure nvarchar(10)
+AS
+select TURA.Oznaka, TURA.BrojPrijema, TURA.DatumPrijema, TURA.Isporucilac, SORTA.Naziv as NazivSorte,
+TURA.NetoMasaKg, TURA.SecerProcenat, TURA.KiselostGl, TURA.TemperaturaC, TURA.UdeoOstecenihProcenat, TURA.Usmerenje
+from TURA inner join SORTA on SORTA.Sifra = TURA.SifraSorte where TURA.Oznaka = @OznakaTure
+GO
+
+CREATE PROCEDURE [DodajNovuTuru]( 
+@Oznaka nvarchar(10),
+@BrojPrijema nvarchar(20),
+@DatumPrijema date,
+@Isporucilac nvarchar(80),
+@SifraSorte nvarchar(3),
+@NetoMasaKg decimal(10,2),
+@SecerProcenat decimal(5,2),
+@KiselostGl decimal(5,2),
+@TemperaturaC decimal(5,2),
+@UdeoOstecenihProcenat decimal(5,2),
+@Usmerenje nvarchar(30))
+AS
+BEGIN
+Insert into Tura(Oznaka, BrojPrijema, DatumPrijema, Isporucilac, SifraSorte, NetoMasaKg, SecerProcenat, KiselostGl, TemperaturaC, UdeoOstecenihProcenat, Usmerenje)
+values (@Oznaka, @BrojPrijema, @DatumPrijema, @Isporucilac, @SifraSorte, @NetoMasaKg, @SecerProcenat, @KiselostGl, @TemperaturaC, @UdeoOstecenihProcenat, @Usmerenje)
+END
+GO
+
+CREATE PROCEDURE [ObrisiTuru](
+@Oznaka nvarchar(10))
+AS
+BEGIN
+Delete from Tura where Oznaka=@Oznaka
+END
+GO
+
+CREATE PROCEDURE [IzmeniTuru](
+@StaraOznaka nvarchar(10),
+@Oznaka nvarchar(10),
+@BrojPrijema nvarchar(20),
+@DatumPrijema date,
+@Isporucilac nvarchar(80),
+@SifraSorte nvarchar(3),
+@NetoMasaKg decimal(10,2),
+@SecerProcenat decimal(5,2),
+@KiselostGl decimal(5,2),
+@TemperaturaC decimal(5,2),
+@UdeoOstecenihProcenat decimal(5,2),
+@Usmerenje nvarchar(30))
+AS
+BEGIN
+Update Tura set Oznaka=@Oznaka, BrojPrijema=@BrojPrijema, DatumPrijema=@DatumPrijema, Isporucilac=@Isporucilac,
+SifraSorte=@SifraSorte, NetoMasaKg=@NetoMasaKg, SecerProcenat=@SecerProcenat, KiselostGl=@KiselostGl,
+TemperaturaC=@TemperaturaC, UdeoOstecenihProcenat=@UdeoOstecenihProcenat, Usmerenje=@Usmerenje
+where Oznaka=@StaraOznaka
+END
+GO
+
+
+CREATE PROCEDURE [DajSveTureSaJoinSifromSorte] 
+AS
+Select Tura.Oznaka, Tura.BrojPrijema, Tura.DatumPrijema, Tura.Isporucilac, Sorta.Naziv as NazivSorte, Sorta.Sifra as SifraSorte,
+Tura.NetoMasaKg, Tura.SecerProcenat, Tura.KiselostGl, Tura.TemperaturaC, Tura.UdeoOstecenihProcenat, Tura.Usmerenje
+from Tura inner join Sorta on Tura.SifraSorte = Sorta.Sifra
+GO
+
+CREATE PROCEDURE [DajSvePrijeme]
+AS
+select * from PRIJEM
+GO
+
+CREATE PROCEDURE [DajPrijemPoBroju]
+(@BrojPrijema nvarchar(20))
+AS
+select * from PRIJEM where BrojPrijema = @BrojPrijema
+GO
+
+CREATE PROCEDURE [DajTurePoBrojuPrijema]
+(@BrojPrijema nvarchar(20))
+AS
+Select Tura.Oznaka, Tura.BrojPrijema, Tura.DatumPrijema, Tura.Isporucilac, Sorta.Naziv as NazivSorte,
+Tura.NetoMasaKg, Tura.SecerProcenat, Tura.KiselostGl, Tura.TemperaturaC, Tura.UdeoOstecenihProcenat, Tura.Usmerenje
+from Tura inner join Sorta on Tura.SifraSorte = Sorta.Sifra
+where Tura.BrojPrijema = @BrojPrijema
+GO

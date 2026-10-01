@@ -1,0 +1,35 @@
+Evidencija prijema grozdja u vinariji
+Seminarski rad — Razvoj viseslojnog softvera
+Tehnicki fakultet "Mihajlo Pupin" Zrenjanin
+
+PRIJAVA
+  korisnicko ime: admin
+  sifra: admin
+  start: http://localhost:1202/Prijava
+
+BAZA
+  SQL Server LocalDB: (localdb)\MSSQLLocalDB
+  Baza: VP2026Vinarija
+  Skripta: 1_SlojPodataka\BazaPodataka\
+
+POKRETANJE
+  1. Visual Studio 2022 (workload ASP.NET) ili IIS Express
+  2. Kreirati bazu i build:
+       powershell -ExecutionPolicy Bypass -File "_provera\pokreni-sve.ps1"
+  3. Prvo SOAP servis:
+       3_SlojServisa\WebServis\ParametriKvaliteta\ParametriKvaliteta.sln
+       port 1718, OgranicenjaKvaliteta.asmx
+  4. Zatim MVC aplikacija:
+       4_PrezentacioniSloj\KorisnickiInterfejs\KorisnickiInterfejs\KorisnickiInterfejs.sln
+       port 1202, start /Prijava
+  5. REST parametri kvaliteta:
+       http://localhost:1718/OgranicenjaRest.ashx?akcija=DajMinSecer&sifra=R
+
+ARHITEKTURA
+  ASP.NET MVC (Controller, View, ViewModel) — nema Web Forms
+  Tri nacina rada sa bazom: stored procedure, TabelaKlasa, Entity Framework 6
+  Rute: /Prijava, /Pocetna, /Sorta/Tabelarni, /Tura/Spisak, /Prijem/Unos
+
+DOKUMENTACIJA (struktura sa Google ucionice, odeljci 1-6)
+  Dokumentacija\Evidencija-prijema-grozdja-seminarski.docx
+  Dokumentacija\Dokument-struktura-seminarskog.html

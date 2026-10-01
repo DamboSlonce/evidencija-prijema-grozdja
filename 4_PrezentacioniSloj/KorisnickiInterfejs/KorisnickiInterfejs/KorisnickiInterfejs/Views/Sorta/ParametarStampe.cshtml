@@ -1,0 +1,10 @@
+@model KorisnickiInterfejs.Models.SortaViewModel
+<div class="page-title">Izbor parametra štampe spiska sorti</div>
+<div class="toolbar">
+    @using (Html.BeginForm("ParametarStampe", "Sorta", FormMethod.Post))
+    {
+        <text>Naziv sorte</text>
+        @Html.TextBoxFor(m => m.Filter)
+        <input type="submit" value="PRIKAZI FILTRIRANI SPISAK ZA STAMPU" />
+    }
+</div>

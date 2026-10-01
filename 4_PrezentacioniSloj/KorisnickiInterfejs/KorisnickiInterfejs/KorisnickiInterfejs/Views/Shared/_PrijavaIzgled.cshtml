@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="sr" lang="sr">
+<head>
+    <meta charset="utf-8" />
+    <title>Vinarija — prijava</title>
+    <link href="@Url.Content("~/Styles/Site.css?v=3")" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Validacija.js")"></script>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <div class="brand">
+                <div class="brand-mark">VP</div>
+                <div class="brand-text">
+                    <h1>Vinarija</h1>
+                    <p class="tagline">Evidencija prijema grožđa · TFZR</p>
+                </div>
+            </div>
+            <div class="loginDisplay"></div>
+            <div class="clear hideSkiplink">
+                <div class="menu">
+                    <ul>
+                        <li>@Html.ActionLink("Pocetna", "Index", "Prijava")</li>
+                        <li>@Html.ActionLink("O sistemu", "OSistemu", "Prijava")</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            @RenderBody()
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="footer">
+        Razvoj višeslojnog softvera · Tehnički fakultet "Mihajlo Pupin" Zrenjanin · 2026.
+    </div>
+</body>
+</html>

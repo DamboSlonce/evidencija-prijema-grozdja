@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="yes"?>
+<SpisakOgranicenja>
+  <OgranicenjeSorte>
+    <SifraSorte>R</SifraSorte>
+    <MinSecer>19</MinSecer>
+    <MaksimalniUdeoOstecenih>10</MaksimalniUdeoOstecenih>
+  </OgranicenjeSorte>
+  <OgranicenjeSorte>
+    <SifraSorte>T</SifraSorte>
+    <MinSecer>18</MinSecer>
+    <MaksimalniUdeoOstecenih>10</MaksimalniUdeoOstecenih>
+  </OgranicenjeSorte>
+  <OgranicenjeSorte>
+    <SifraSorte>P</SifraSorte>
+    <MinSecer>20</MinSecer>
+    <MaksimalniUdeoOstecenih>10</MaksimalniUdeoOstecenih>
+  </OgranicenjeSorte>
+</SpisakOgranicenja>

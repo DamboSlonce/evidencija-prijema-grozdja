@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8" />
+  <title>Evidencija prijema grožđa — dokumentacija seminarskog rada</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    body { font-family: "Times New Roman", serif; max-width: 960px; margin: 24px auto; line-height: 1.45; color: #111; }
+    h1, h2, h3, h4 { font-family: Calibri, Arial, sans-serif; color: #3b1220; }
+    h1 { font-size: 22pt; }
+    h2 { border-bottom: 2px solid #5c1a2e; padding-bottom: 4px; margin-top: 36px; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 11pt; }
+    td, th { border: 1px solid #333; padding: 6px 8px; text-align: left; vertical-align: top; }
+    th { background: #f3e6ea; }
+    .naslovna { text-align: center; margin: 48px 0 64px; }
+    .naslovna p { margin: 6px 0; }
+    .muted { color: #444; }
+    pre, code { font-family: Consolas, "Courier New", monospace; font-size: 9.5pt; }
+    pre { background: #f7f4f2; border: 1px solid #ccc; padding: 10px 12px; overflow-x: auto; }
+    .ekran { border: 2px solid #5c1a2e; margin: 16px 0 8px; background: #fff; }
+    .ekran-header { background: #5c1a2e; color: #fff; padding: 8px 12px; font-family: Calibri, Arial, sans-serif; }
+    .ekran-menu { background: #7a2a42; color: #fff; padding: 6px 12px; font-size: 10pt; }
+    .ekran-body { padding: 12px 16px; }
+    .ekran-foot { background: #eee; padding: 6px 12px; font-size: 9pt; color: #555; }
+    .btn { display: inline-block; border: 1px solid #333; padding: 2px 10px; background: #eee; margin-right: 6px; }
+    .napomena { background: #fff8e6; border-left: 4px solid #c9a227; padding: 8px 12px; margin: 12px 0; }
+    .toc a { text-decoration: none; color: #3b1220; }
+    caption { caption-side: top; text-align: left; font-weight: bold; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="naslovna">
+    <p>Univerzitet u Novom Sadu</p>
+    <p>Tehnički fakultet „Mihajlo Pupin“ Zrenjanin</p>
+    <p>Katedra za informacione tehnologije</p>
+    <p class="muted">Školska 2025/26</p>
+    <h1>EVIDENCIJA PRIJEMA GROŽĐA U VINARIJI</h1>
+    <p>Seminarski rad iz predmeta <strong>Razvoj višeslojnog softvera</strong></p>
+    <p>Predmetni nastavnik: Prof. dr Ljubica Kazi</p>
+    <p>Dokument poslovnog procesa: <em>Zapisnik o prijemu grožđa</em></p>
+    <p style="margin-top:28px">Prezime: <strong>Škorić</strong> &nbsp; Ime: <strong>Luka</strong></p>
+    <p>Broj indeksa: <strong>SI 23/21</strong></p>
+  </div>
+
+  <h2>Sadržaj</h2>
+  <ol class="toc">
+    <li><a href="#s1">Opis namene aplikacije u kontekstu poslovnog procesa i poslovnog pravila</a></li>
+    <li><a href="#s2">Dokument i analiza dokumenta</a></li>
+    <li><a href="#s3">Korisničko uputstvo</a></li>
+    <li><a href="#s4">Kratak opis primenjenih alata</a></li>
+    <li><a href="#s5">Modeli dokumentovanja realizovanog rešenja</a>
+      <ol>
+        <li>Dijagram slučajeva korišćenja</li>
+        <li>Relacioni model podataka</li>
+        <li>Dijagram komponenti</li>
+        <li>Dijagram klasa (sloj podataka i poslovna logika)</li>
+        <li>Dijagram sekvenci (unos i tabelarni prikaz)</li>
+      </ol>
+    </li>
+    <li><a href="#s6">Ključni delovi koda sa objašnjenjem</a></li>
+  </ol>
+
+  <h2 id="s1">1. Opis namene aplikacije u kontekstu poslovnog procesa i poslovnog pravila</h2>
+  <p>
+    Aplikacija podržava poslovni proces <strong>evidencije prijema grožđa u vinariji</strong>.
+    Na prijemnom mestu se za svaku turu grožđa meri neto masa, sadržaj šećera, kiselost,
+    temperatura i udeo oštećenih bobica. Podaci se upisuju u dokument
+    <em>Zapisnik o prijemu grožđa</em>. Jedan zapisnik (prijem) može da sadrži više tura
+    (odnos celina–deo, master–detail). Sistem ne obrađuje otkup ni cenu, već merenja kvaliteta
+    i usmerenje prerade.
+  </p>
+  <p>
+    Poslovno pravilo je parametrizovano i ima oblik AKO uslov ONDA automatska akcija:
+  </p>
+  <p>
+    <strong>AKO</strong> je sadržaj šećera u turi (%) manji od minimuma X za tu sortu
+    <strong>ILI</strong> je udeo oštećenih bobica veći od dozvoljenog Y%,
+    <strong>ONDA</strong> sistem automatski usmerava turu u <em>destilat</em>
+    (ne dozvoljava usmerenje „kvalitetno vino“).
+  </p>
+  <p>
+    Parametri odlučivanja X i Y nisu u kodu, već u eksternom XML fajlu
+    <code>OgranicenjaKvaliteta.XML</code> (Rizling: 19% / 10%, Tamjanika: 18% / 10%, Prokupac: 20% / 10%).
+    Poslovna logika ih čita pozivom SOAP servisa, a isti parametri su dostupni i preko REST servisa u JSON formatu.
+  </p>
+
+  <h2 id="s2">2. Dokument i analiza dokumenta</h2>
+  <p>Izgled dokumenta <em>Zapisnik o prijemu grožđa</em> (zaglavlje = prijem, stavke = ture):</p>
+  <div class="ekran">
+    <div class="ekran-header">VINARIJA &nbsp;·&nbsp; ZAPISNIK O PRIJEMU GROŽĐA</div>
+    <div class="ekran-body">
+      <p>Broj prijema: <strong>PG-2026-0148</strong> &nbsp; Datum: <strong>18.09.2026.</strong> &nbsp; Isporučilac: <strong>Petar Jovanović</strong></p>
+      <table>
+        <tr><th>Oznaka</th><th>Sorta</th><th>Neto (kg)</th><th>Šećer (%)</th><th>Kiselost (g/l)</th><th>t (°C)</th><th>Oštećene (%)</th><th>Usmerenje</th></tr>
+        <tr><td>T-0148-01</td><td>Rizling</td><td>1820</td><td>21,4</td><td>6,8</td><td>18</td><td>3,2</td><td>kvalitetno vino</td></tr>
+        <tr><td>T-0148-02</td><td>Rizling</td><td>940</td><td>16,1</td><td>7,1</td><td>22</td><td>12,5</td><td>destilat</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <table>
+    <caption>Tabela 1. Elementarni podaci dokumenta — standardni tipovi i domeni</caption>
+    <tr>
+      <th>Naziv elementarnog podatka</th>
+      <th>Standardni tip</th>
+      <th>Domen (uži tip)</th>
+    </tr>
+    <tr><td>Broj prijema</td><td>string</td><td>nvarchar(20), jedinstven, format PG-GGGG-NNNN</td></tr>
+    <tr><td>Datum prijema</td><td>date</td><td>date, ispravan kalendarski datum</td></tr>
+    <tr><td>Isporučilac</td><td>string</td><td>nvarchar(80), nije prazan</td></tr>
+    <tr><td>Oznaka ture</td><td>string</td><td>nvarchar(10), jedinstvena u tabeli TURA</td></tr>
+    <tr><td>Šifra sorte</td><td>string</td><td>char(10), FK na SORTA.Sifra</td></tr>
+    <tr><td>Naziv sorte</td><td>string</td><td>nvarchar(50), vrednost iz šifarnika SORTA</td></tr>
+    <tr><td>Neto masa (kg)</td><td>decimal</td><td>decimal(10,2), &gt; 0</td></tr>
+    <tr><td>Šećer (%)</td><td>decimal</td><td>decimal(5,2), 0–100</td></tr>
+    <tr><td>Kiselost (g/l)</td><td>decimal</td><td>decimal(5,2), ≥ 0</td></tr>
+    <tr><td>Temperatura (°C)</td><td>decimal</td><td>decimal(5,2)</td></tr>
+    <tr><td>Udeo oštećenih (%)</td><td>decimal</td><td>decimal(5,2), 0–100</td></tr>
+    <tr><td>Usmerenje</td><td>string</td><td>domen {kvalitetno vino, destilat}</td></tr>
+    <tr><td>Korisničko ime</td><td>string</td><td>nvarchar, nalog iz tabele Korisnik</td></tr>
+    <tr><td>Šifra korisnika</td><td>string</td><td>nvarchar, lozinka naloga</td></tr>
+  </table>
+  <p><strong>Objašnjenje domena.</strong>
+    Broj prijema identifikuje celinu dokumenta. Oznaka ture identifikuje stavku.
+    Sorta mora da postoji u šifarniku. Numerička merenja su decimalni brojevi;
+    šećer i udeo oštećenih su procenti. Usmerenje nije slobodan tekst — poslovna logika
+    ga postavlja na jednu od dve vrednosti iz domena, na osnovu XML parametara X i Y.
+    Korisnik je nezavisna tabela za prijavu (admin / admin).</p>
+
+  <h2 id="s3">3. Korisničko uputstvo</h2>
+  <p>Aplikacija se pokreće na <code>http://localhost:1202/Prijava</code>. Jezik interfejsa, baze i URL-ova je srpski. Nema Web Forms stranica.</p>
+
+  <h3>3.1 Prijava</h3>
+  <div class="ekran">
+    <div class="ekran-header">Vinarija — evidencija prijema grožđa</div>
+    <div class="ekran-body">
+      <p><strong>Prijava korisnika</strong></p>
+      <p>Korisničko ime: [ admin ]<br />Šifra: [ **** ]</p>
+      <span class="btn">PRIJAVA</span>
+    </div>
+  </div>
+  <p>Unose se korisničko ime i šifra. JavaScript proverava da polja nisu prazna. Ako nalog postoji u tabeli Korisnik, otvara se početna strana. Demo nalog: <code>admin</code> / <code>admin</code>.</p>
+
+  <h3>3.2 Početna strana</h3>
+  <div class="ekran">
+    <div class="ekran-header">Vinarija &nbsp; Evidencija prijema grožđa · TFZR · MVC</div>
+    <div class="ekran-menu">SORTE ▾ &nbsp; PRIJEM GROŽĐA ▾ &nbsp; &nbsp; ODJAVA</div>
+    <div class="ekran-body">
+      <p><strong>Dobrodošli u evidenciju prijema grožđa</strong></p>
+      <p>Kartice: Unos ture · Spisak tura · Sorte · Štampa zapisnika</p>
+    </div>
+    <div class="ekran-foot">Razvoj višeslojnog softvera · TFZR · 2026.</div>
+  </div>
+  <p>Meni vodi na CRUD sorti, unos/spisak tura, master–detail prijem i štampu.</p>
+
+  <h3>3.3 Šifarnik sorti</h3>
+  <p><strong>Tabelarni prikaz</strong> (<code>/Sorta/Tabelarni</code>) — lista sorti. Prikaz svih sorti ide preko Entity Framework-a. Filter po nazivu ide preko stored procedure. Dugmad FILTRIRAJ / SVI.</p>
+  <p><strong>Unos</strong> (<code>/Sorta/Unos</code>) — šifra i naziv. <strong>Izmena i brisanje</strong> — izbor iz tabele pa detalji. <strong>Štampa</strong> i <strong>parametarska štampa</strong> — printer-friendly spisak.</p>
+
+  <h3>3.4 Unos ture i spisak</h3>
+  <p>Na <code>/Tura/Unos</code> se unose merenja jedne ture. Usmerenje se predlaže poslovnim pravilom (SOAP + XML). Na <code>/Tura/Spisak</code> je tabelarni prikaz sa filterom po isporučiocu.</p>
+
+  <h3>3.5 Master–detail unos i prikaz prijema</h3>
+  <div class="ekran">
+    <div class="ekran-header">Vinarija</div>
+    <div class="ekran-menu">SORTE ▾ &nbsp; PRIJEM GROŽĐA ▾</div>
+    <div class="ekran-body">
+      <p><strong>Master-detail unos prijema sa turama</strong></p>
+      <p>Broj prijema / Datum / Isporučilac (zaglavlje)</p>
+      <p>Stavka — tura: Oznaka, Sorta, Neto, Šećer, Kiselost, t, Oštećene &nbsp; <span class="btn">DODAJ TURU</span></p>
+      <table>
+        <tr><th>Oznaka</th><th>Sorta</th><th>Neto</th><th>Šećer</th></tr>
+        <tr><td>T-0148-01</td><td>Rizling</td><td>1820</td><td>21,4</td></tr>
+      </table>
+      <span class="btn">SNIMI PRIJEM</span>
+    </div>
+  </div>
+  <p>Zaglavlje i sve stavke se snimaju u jednoj transakciji. Prikaz prijema: izbor broja prijema, zatim sve ture tog zapisnika.</p>
+
+  <h3>3.6 Štampa</h3>
+  <p>Štampa zapisnika (<code>/Tura/Stampa</code>) daje spisak svih tura u printer-friendly izgledu. Parametarska štampa traži isporučioca i štampa filtrirani dokument. Štampa pojedinačnog zapisnika odgovara dokumentu sa prijave teme (zaglavlje + stavke).</p>
+
+  <h2 id="s4">4. Kratak opis primenjenih alata</h2>
+  <table>
+    <tr><th>Alat / tehnologija</th><th>Namena u radu</th></tr>
+    <tr><td>Microsoft Visual Studio 2022</td><td>Razvoj, kompajliranje, IIS Express</td></tr>
+    <tr><td>C# / .NET Framework 4.0 (biblioteke) i 4.8 (MVC UI)</td><td>Programski jezik i runtime</td></tr>
+    <tr><td>ASP.NET MVC 5.2.9 + Razor</td><td>Prezentacioni sloj: Controller, View, ViewModel</td></tr>
+    <tr><td>Microsoft SQL Server LocalDB</td><td>Relaciona baza VP2026Vinarija</td></tr>
+    <tr><td>ADO.NET (SqlConnection, SqlCommand, SqlDataAdapter)</td><td>SQL client + stored procedure</td></tr>
+    <tr><td>DBUtils (TabelaKlasa)</td><td>Nasleđivanje i izvršavanje SQL upita / transakcija</td></tr>
+    <tr><td>Entity Framework 6.1.3</td><td>ORM — treći način rada sa bazom (klasa SORTA)</td></tr>
+    <tr><td>ASP.NET Web Services (ASMX) + XML</td><td>SOAP servis parametara poslovnog pravila</td></tr>
+    <tr><td>IHttpHandler (.ashx)</td><td>REST servis (JSON) — parametri i CRUD podaci</td></tr>
+    <tr><td>JavaScript (Validacija.js)</td><td>Klijentske validacije i regularni izrazi</td></tr>
+  </table>
+  <p>Arhitektura nema ASP.NET Web Forms (.aspx / .Master). Korisnički interfejs je isključivo MVC sa ViewModel klasama.</p>
+
+  <h2 id="s5">5. Modeli dokumentovanja realizovanog rešenja</h2>
+
+  <h3>5.1 Dijagram slučajeva korišćenja (softverske funkcije)</h3>
+  <div class="mermaid">
+flowchart LR
+  K[Korisnik]
+  K --> A[Prijava]
+  K --> B[CRUD sorte]
+  K --> C[Unos ture]
+  K --> D[Spisak tura]
+  K --> E[MD unos prijema]
+  K --> F[MD prikaz prijema]
+  K --> G[Stampa spiska]
+  K --> H[Parametarska stampa]
+  </div>
+  <p>Akter je prijavljeni korisnik. Funkcije: prijava, CRUD šifarnika SORTA, unos i tabelarni prikaz tura, master–detail unos i prikaz prijema, štampa svih i parametarska štampa.</p>
+
+  <h3>5.2 Relacioni model podataka</h3>
+  <div class="mermaid">
+erDiagram
+  KORISNIK {
+    nvarchar KorisnickoIme PK
+    nvarchar Sifra
+    nvarchar Ime
+    nvarchar Prezime
+  }
+  SORTA {
+    char Sifra PK
+    nvarchar Naziv
+  }
+  PRIJEM {
+    nvarchar BrojPrijema PK
+    date DatumPrijema
+    nvarchar Isporucilac
+  }
+  TURA {
+    nvarchar Oznaka PK
+    nvarchar BrojPrijema FK
+    date DatumPrijema
+    nvarchar Isporucilac
+    char SifraSorte FK
+    decimal NetoMasaKg
+    decimal SecerProcenat
+    decimal KiselostGl
+    decimal TemperaturaC
+    decimal UdeoOstecenihProcenat
+    nvarchar Usmerenje
+  }
+  PRIJEM ||--o{ TURA : sadrzi
+  SORTA ||--o{ TURA : klasifikuje
+  </div>
+  <p>Četiri tabele: SORTA (šifarnik), PRIJEM (zaglavlje dokumenta), TURA (stavke, FK na PRIJEM i SORTA), Korisnik (nezavisna tabela za login). Baza: <code>VP2026Vinarija</code>.</p>
+
+  <h3>5.3 Dijagram komponenti</h3>
+  <div class="mermaid">
+flowchart TB
+  subgraph prezentacija [Prezentacioni sloj MVC]
+    V["Views Razor"]
+    C["Controllers"]
+    VM["ViewModel klase"]
+    FL["Forma*Klasa prezentaciona logika"]
+  end
+  subgraph servis [Sloj servisa]
+    SOAP["OgranicenjaKvaliteta.asmx SOAP"]
+    REST1["OgranicenjaRest.ashx JSON"]
+    REST2["PodaciRest.ashx CRUD JSON"]
+    XML["OgranicenjaKvaliteta.XML"]
+  end
+  subgraph bl [Sloj poslovne logike]
+    UP["UsmerenjePreradeKlasa"]
+    AT["AnalizaTureKlasa"]
+    PK["ParametriKvalitetaKlasa"]
+  end
+  subgraph data [Sloj podataka]
+    REPO["Repository klase"]
+    SP["SP*DBKlasa SQL client + SP"]
+    TAB["TuraDBKlasa / PrijemDBKlasa : TabelaKlasa"]
+    EF["VinarijaKontekstKlasa : DbContext"]
+    DB[(VP2026Vinarija)]
+  end
+  V --> C --> VM --> FL --> UP
+  FL --> REPO
+  UP --> PK --> SOAP
+  SOAP --> XML
+  REST1 --> XML
+  REST2 --> FL
+  PK --> REST1
+  REPO --> SP --> DB
+  REPO --> TAB --> DB
+  REPO --> EF --> DB
+  </div>
+
+  <h3>5.4 Dijagram klasa — sloj za rad sa podacima i sloj poslovne logike</h3>
+  <div class="mermaid">
+classDiagram
+  class SortaKlasa {
+    +string Sifra
+    +string Naziv
+  }
+  class TuraKlasa {
+    +string Oznaka
+    +string BrojPrijema
+    +DateTime DatumPrijema
+    +string Isporucilac
+    +SortaKlasa Sorta
+    +decimal NetoMasaKg
+    +decimal SecerProcenat
+    +decimal KiselostGl
+    +decimal TemperaturaC
+    +decimal UdeoOstecenihProcenat
+    +string Usmerenje
+  }
+  class PrijemKlasa {
+    +string BrojPrijema
+    +DateTime DatumPrijema
+    +string Isporucilac
+    +List Ture
+  }
+  class TabelaKlasa {
+    +DajPodatke(upit) DataSet
+    +IzvrsiAzuriranje(upit) bool
+    +IzvrsiAzuriranje(lista) bool
+  }
+  class TuraDBKlasa {
+    +DajSveTure() DataSet
+    +DodajNovuTuru(tura) bool
+  }
+  class PrijemDBKlasa {
+    +DajSvePrijeme() DataSet
+    +DajPrijemPoBroju(broj) DataSet
+    +DajTurePoBrojuPrijema(broj) DataSet
+    +SnimiPrijemSaTurama(prijem, ture) bool
+  }
+  class SPSortaDBKlasa {
+    -string _stringKonekcije
+    +DajSveSorte() DataSet
+    +DajSortePoNazivu(filter) DataSet
+    +SnimiNovuSortu(sorta) bool
+  }
+  class SortaRepositoryKlasa {
+    +DajSveSorte() DataSet
+    +SnimiNovuSortu(sorta) bool
+    +DajSveSortePrekoEntityFramework() DataSet
+  }
+  class TuraRepositoryKlasa {
+    +DajSveTure() DataSet
+    +SnimiNovuTuru(tura) bool
+    +DajSveTurePrekoNasledjeneKlase() DataSet
+  }
+  class PrijemRepositoryKlasa {
+    +SnimiPrijemSaTurama(prijem, ture) bool
+    +SnimiJednuTuruSaZaglavljem(tura) bool
+  }
+  class SortaEfKlasa {
+    +string Sifra
+    +string Naziv
+  }
+  class VinarijaKontekstKlasa {
+    +DbSet Sorte
+    +OnModelCreating()
+  }
+  class SortaEfRepositoryKlasa {
+    +DajSve() List
+    +DajPoId(sifra) SortaEfKlasa
+    +SnimiNovi(sorta) bool
+  }
+  class UsmerenjePreradeKlasa {
+    +OdrediUsmerenje(sorta, secer, udeo) string
+    +DaLiMozeKvalitetnoVino(...) bool
+  }
+  class AnalizaTureKlasa {
+    +decimal SecerProcenat
+    +decimal UdeoOstecenihProcenat
+  }
+  class ParametriKvalitetaKlasa {
+    +DajMinSecerZaSortu(sifra) decimal
+    +DajMaxUdeoOstecenihZaSortu(sifra) decimal
+  }
+  TuraKlasa --> SortaKlasa : asocijacija
+  PrijemKlasa o-- TuraKlasa : kompozicija
+  TuraDBKlasa --|> TabelaKlasa
+  PrijemDBKlasa --|> TabelaKlasa
+  VinarijaKontekstKlasa --|> DbContext
+  SortaRepositoryKlasa --> SPSortaDBKlasa
+  SortaRepositoryKlasa --> SortaEfRepositoryKlasa
+  SortaEfRepositoryKlasa --> VinarijaKontekstKlasa
+  VinarijaKontekstKlasa --> SortaEfKlasa
+  TuraRepositoryKlasa --> TuraDBKlasa
+  PrijemRepositoryKlasa --> PrijemDBKlasa
+  UsmerenjePreradeKlasa --> AnalizaTureKlasa
+  UsmerenjePreradeKlasa --> ParametriKvalitetaKlasa
+  UsmerenjePreradeKlasa --> MaperKlasa
+  </div>
+  <p>Tri načina rada sa bazom: (1) SQL client + stored procedure — <code>SPSortaDBKlasa</code>;
+    (2) nasleđivanje <code>TabelaKlasa</code> — <code>TuraDBKlasa</code>, <code>PrijemDBKlasa</code>;
+    (3) Entity Framework — <code>SortaEfKlasa</code> + <code>VinarijaKontekstKlasa : DbContext</code>.</p>
+
+  <h3>5.5 Dijagram sekvenci — unos i tabelarni prikaz</h3>
+  <p><strong>Unos prijema (master–detail, transakcija):</strong></p>
+  <div class="mermaid">
+sequenceDiagram
+  participant K as Korisnik
+  participant V as View Unos
+  participant C as PrijemController
+  participant VM as PrijemUnosViewModel
+  participant F as FormaPrijemUnosKlasa
+  participant BL as UsmerenjePreradeKlasa
+  participant R as PrijemRepositoryKlasa
+  participant DB as PrijemDBKlasa TabelaKlasa
+  K->>V: popuni zaglavlje i stavke
+  V->>C: POST Unos SNIMI
+  C->>VM: model iz forme
+  C->>F: SnimiPrijemSaTabelom
+  F->>BL: OdrediUsmerenje za svaku turu
+  BL-->>F: destilat / kvalitetno vino
+  F->>R: SnimiPrijemSaTurama
+  R->>DB: IzvrsiAzuriranje lista INSERT
+  DB-->>K: uspeh transakcije
+  </div>
+  <p><strong>Tabelarni prikaz sorti (Entity Framework):</strong></p>
+  <div class="mermaid">
+sequenceDiagram
+  participant K as Korisnik
+  participant V as View Tabelarni
+  participant C as SortaController
+  participant F as FormaSortaTabelaEditKlasa
+  participant R as SortaRepositoryKlasa
+  participant EF as SortaEfRepositoryKlasa
+  participant CTX as VinarijaKontekstKlasa
+  K->>C: GET /Sorta/Tabelarni
+  C->>F: DajPodatkeZaGrid prazan filter
+  F->>R: DajSveSortePrekoEntityFramework
+  R->>EF: DajSveKaoDataSet
+  EF->>CTX: Sorte.ToList
+  CTX-->>V: tabela Sifra, Naziv
+  </div>
+
+  <h2 id="s6">6. Ključni delovi koda sa objašnjenjem</h2>
+
+  <h3>6.1 Realizacija korisničkih softverskih funkcija</h3>
+  <h4>6.1.1 Prijava korisnika</h4>
+  <p>
+    Ruta <code>/Prijava</code> otvara <code>PrijavaController.Index</code>. GET vraća prazan
+    <code>PrijavaViewModel</code>. POST mapira ViewModel na <code>FormaLoginKlasa</code>,
+    koja preko <code>SPKorisnikDBKlasa</code> (stored procedure) proverava nalog.
+    Uspeh: sesija <code>KorisnikImePrezime</code> i redirekcija na <code>/Pocetna</code>.
+    Filter <code>ZahtevaPrijavu</code> štiti ostale kontrolere.
+  </p>
+  <pre>public ActionResult Index(PrijavaViewModel model)
+{
+    FormaLoginKlasa forma = new FormaLoginKlasa(this.StringKonekcije);
+    forma.KorisnickoIme = model.KorisnickoIme;
+    forma.Sifra = model.Sifra;
+    bool pronadjen = forma.VazeciKorisnik();
+    if (pronadjen)
+    {
+        Session["KorisnikImePrezime"] = forma.DajImePrezimeKorisnika();
+        return RedirectToAction("Index", "Pocetna");
+    }
+    model.Poruka = "KORISNIK NIJE PRONADJEN!";
+    return View(model);
+}</pre>
+
+  <h4>6.1.2 CRUD operacije nad glavnom tabelom</h4>
+  <p>
+    Glavna tabela dokumenta je <code>TURA</code> (stavke) uz zaglavlje <code>PRIJEM</code>.
+    <code>TuraController</code>: Unos, Spisak (filter), štampa.
+    <code>PrijemController.Unos</code>: unos celine sa delovima na jednoj formi (stavke u sesiji, zatim transakcija).
+    <code>PrijemController.Prikaz</code>: pojedinačni zapis celine sa svim delovima.
+    Šifarnik SORTA ima pun CRUD u <code>SortaController</code> (Tabelarni, Unos, Izmena, Detalji, Obrisi).
+  </p>
+
+  <h4>6.1.3 Štampa i parametarska štampa</h4>
+  <p>
+    Pogledi koriste layout <code>_Stampa.cshtml</code> (printer-friendly).
+    <code>/Tura/Stampa?filter=0</code> — spisak svih tura.
+    <code>/Tura/ParametarStampe</code> — unos isporučioca, zatim filtrirani zapisnik.
+    Izgled tabele odgovara dokumentu sa prijave teme (zaglavlje kolona + stavke + usmerenje).
+  </p>
+
+  <h3>6.2 Realizacija osnovnih validacija</h3>
+  <p>
+    Na prezentacionoj logici: <code>DaLiJeSvePopunjeno</code> (obavezna polja), provera tipa (decimal.Parse),
+    dužina (maxlength u View), domen (drop-down sorte i usmerenje), jedinstvenost (PK u bazi).
+    Primer — zaglavlje prijema mora imati broj, datum i isporučioca pre snimanja.
+  </p>
+
+  <h3>6.3 Prezentacioni sloj — MVC i ViewModel</h3>
+  <p>
+    Nema Web Forms. Tok: <strong>View</strong> (Razor) ↔ <strong>Controller</strong> ↔ <strong>ViewModel</strong>
+    ↔ Forma*Klasa (prezentaciona logika) ↔ repository / poslovna logika.
+  </p>
+  <table>
+    <tr><th>Controller</th><th>View</th><th>ViewModel</th></tr>
+    <tr><td>PrijavaController</td><td>Views/Prijava/Index.cshtml</td><td>PrijavaViewModel (KorisnickoIme, Sifra, Poruka)</td></tr>
+    <tr><td>SortaController</td><td>Views/Sorta/*</td><td>SortaViewModel (Sifra, Naziv, Filter)</td></tr>
+    <tr><td>TuraController</td><td>Views/Tura/*</td><td>TuraUnosViewModel</td></tr>
+    <tr><td>PrijemController</td><td>Views/Prijem/*</td><td>PrijemUnosViewModel</td></tr>
+  </table>
+  <p>Rute: podrazumevani kontroler je Prijava. Primer ViewModel:</p>
+  <pre>public class PrijavaViewModel
+{
+    public string KorisnickoIme { get; set; }
+    public string Sifra { get; set; }
+    public string Poruka { get; set; }
+}</pre>
+  <p>View vezuje polja: <code>@Html.TextBoxFor(m =&gt; m.KorisnickoIme)</code>.</p>
+
+  <h3>6.4 Sloj poslovne logike — realizacija poslovnog pravila</h3>
+  <p>
+    <code>UsmerenjePreradeKlasa.OdrediUsmerenje</code> mapira naziv sorte na šifru servisa (R/T/P),
+    zatim SOAP metodama čita X i Y iz XML-a. Ako je šećer &lt; X ili udeo oštećenih &gt; Y, rezultat je destilat.
+  </p>
+  <pre>if ((analizaObjekat.SecerProcenat &lt; pomMinSecer) ||
+    (analizaObjekat.UdeoOstecenihProcenat &gt; pomMaxUdeoOstecenih))
+{
+    pomUsmerenje = "destilat";
+}
+else
+{
+    pomUsmerenje = "kvalitetno vino";
+}</pre>
+  <p>XML parametar (izvod): Rizling <code>&lt;MinSecer&gt;19&lt;/MinSecer&gt;</code>, <code>&lt;MaksimalniUdeoOstecenih&gt;10&lt;/MaksimalniUdeoOstecenih&gt;</code>.</p>
+
+  <h3>6.5 Sloj servisa — REST</h3>
+  <p>Dva REST handlera:</p>
+  <ul>
+    <li><code>OgranicenjaRest.ashx?akcija=DajMinSecer&amp;sifra=R</code> — parametri poslovnog pravila iz XML-a, odgovor JSON.</li>
+    <li><code>PodaciRest.ashx?akcija=DajSveTure</code> — međusloj prezentacije prema podacima (CRUD čitanje tura i prijema).</li>
+  </ul>
+  <pre>if (akcija == "DajMinSecer")
+{
+    decimal minSecer = this.DajVrednost(dsOgranicenja, sifra, 1);
+    json = "{\"minSecer\":" + minSecer.ToString(CultureInfo.InvariantCulture) + "}";
+}</pre>
+
+  <h3>6.6 Sloj za rad sa podacima</h3>
+  <h4>6.6.1 Repository patern</h4>
+  <p>
+    <code>SortaRepositoryKlasa</code>, <code>TuraRepositoryKlasa</code>, <code>PrijemRepositoryKlasa</code>
+    — metode na srpskom: <code>DajSveSorte</code>, <code>DajPoId</code> (EF: <code>DajPoId</code>),
+    <code>SnimiNovuSortu</code>, <code>DajSveTure</code>, <code>SnimiPrijemSaTurama</code>.
+    Gornji slojevi ne znaju da li se iza repository-ja koristi SP, TabelaKlasa ili EF.
+  </p>
+  <h4>6.6.2 Rad sa stored procedurama</h4>
+  <pre>SqlCommand pomKomanda = new SqlCommand("DajSveSorte", pomKonekcija);
+pomKomanda.CommandType = CommandType.StoredProcedure;
+SqlDataAdapter adapter = new SqlDataAdapter();
+adapter.SelectCommand = pomKomanda;
+adapter.Fill(PodaciDataSet);</pre>
+  <h4>6.6.3 Rad sa DBUtils i primena upita</h4>
+  <p><code>TuraDBKlasa</code> i <code>PrijemDBKlasa</code> nasleđuju <code>TabelaKlasa</code>. Upit se predaje metodi <code>DajPodatke</code>. Transakcioni unos više naredbi: <code>IzvrsiAzuriranje(List&lt;string&gt;)</code>.</p>
+  <pre>public class PrijemDBKlasa : TabelaKlasa
+{
+    public DataSet DajSvePrijeme()
+    {
+        return this.DajPodatke("select * from PRIJEM");
+    }
+}</pre>
+  <h4>6.6.4 Rad sa Entity Framework klasama</h4>
+  <p>
+    Entitet <code>SortaEfKlasa</code> mapira tabelu SORTA. Kontekst <code>VinarijaKontekstKlasa</code> nasleđuje
+    <code>DbContext</code> (initializer isključen — baza već postoji). Repository čita <code>kontekst.Sorte.ToList()</code>
+    i snima novi zapis sa <code>SaveChanges</code>. Tabelarni prikaz sorti bez filtera koristi ovaj put.
+  </p>
+  <pre>public class SortaEfKlasa
+{
+    public string Sifra { get; set; }
+    public string Naziv { get; set; }
+}
+
+public class VinarijaKontekstKlasa : DbContext
+{
+    public DbSet&lt;SortaEfKlasa&gt; Sorte { get; set; }
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity&lt;SortaEfKlasa&gt;().ToTable("SORTA");
+        modelBuilder.Entity&lt;SortaEfKlasa&gt;().HasKey(s =&gt; s.Sifra);
+    }
+}</pre>
+
+  <h3>6.7 Opciono — Master–detail unos sa transakcijom i tabelarni prikaz</h3>
+  <p>
+    Na formi prijema korisnik dodaje više tura u tabelu u sesiji, zatim snima celinu.
+    <code>PrijemDBKlasa.SnimiPrijemSaTurama</code> pravi listu INSERT naredbi (jedna za PRIJEM, po jedna za svaku TURU)
+    i poziva <code>TabelaKlasa.IzvrsiAzuriranje(listaUpita)</code> — sve ili ništa.
+    Tabelarni prikaz: spisak tura i prikaz svih stavki izabranog prijema.
+  </p>
+
+  <h3>6.8 Opciono — JavaScript validacije i regularni izrazi</h3>
+  <p>
+    Fajl <code>Scripts/Validacija.js</code>: provera praznih polja, numeričkih vrednosti,
+    izbora iz domena (sorta nije „Izaberite...“). Regularni izraz za broj prijema i oznaku ture
+    (slova, cifre, crtica). Funkcije se vezuju na <code>onsubmit</code> / <code>onclick</code> u Razor pogledima.
+  </p>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: "neutral" });
+  </script>
+</body>
+</html>

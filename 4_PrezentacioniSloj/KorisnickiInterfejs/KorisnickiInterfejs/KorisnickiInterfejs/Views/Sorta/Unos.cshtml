@@ -1,0 +1,23 @@
+@model KorisnickiInterfejs.Models.SortaViewModel
+<div class="page-title">Unos sorte</div>
+@using (Html.BeginForm("Unos", "Sorta", FormMethod.Post, new { onsubmit = "return ProveriUnosSorte();" }))
+{
+    <table class="form-table">
+        <tr>
+            <td>Šifra</td>
+            <td>@Html.TextBoxFor(m => m.Sifra, new { id = "SifraTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Naziv</td>
+            <td>@Html.TextBoxFor(m => m.Naziv, new { id = "NazivTextBox" })</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <span class="status-label">@Model.Poruka</span>
+                <input type="submit" value="SNIMI" />
+                @Html.ActionLink("ODUSTANI", "Tabelarni", "Sorta")
+            </td>
+        </tr>
+    </table>
+}

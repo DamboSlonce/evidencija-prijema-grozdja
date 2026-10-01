@@ -1,0 +1,17 @@
+<div class="welcome-box">
+    <h2>Dobrodošli u evidenciju prijema grožđa</h2>
+    <p>
+        Prijavljeni korisnik:
+        <strong>@ViewBag.Korisnik</strong>
+    </p>
+    <p>
+        Dokument sistema je zapisnik o prijemu grožđa. Ture sa nedovoljnim šećerom
+        ili prevelikim udelom oštećenih bobica automatski se usmeravaju u destilat.
+    </p>
+    <div class="dash-grid">
+        <a class="dash-card" href="@Url.Action("Unos", "Tura")"><strong>Unos ture</strong>Novi prijem grožđa i usmerenje prerade.</a>
+        <a class="dash-card" href="@Url.Action("Spisak", "Tura")"><strong>Spisak tura</strong>Pregled i filter zapisnika po isporučiocu.</a>
+        <a class="dash-card" href="@Url.Action("Tabelarni", "Sorta")"><strong>Sorte</strong>Šifarnik sorti grožđa.</a>
+        <a class="dash-card" href="@Url.Action("Stampa", "Tura", new { filter = "0" })"><strong>Štampa zapisnika</strong>Dokument za predaju i arhivu.</a>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+@model KorisnickiInterfejs.Models.TuraUnosViewModel
+<div class="page-title">Izbor parametra štampe zapisnika</div>
+<div class="toolbar">
+    @using (Html.BeginForm("ParametarStampe", "Tura", FormMethod.Post))
+    {
+        <text>Isporučilac</text>
+        @Html.TextBoxFor(m => m.Filter)
+        <input type="submit" value="PRIKAZI FILTRIRANI ZAPISNIK ZA STAMPU" />
+    }
+</div>

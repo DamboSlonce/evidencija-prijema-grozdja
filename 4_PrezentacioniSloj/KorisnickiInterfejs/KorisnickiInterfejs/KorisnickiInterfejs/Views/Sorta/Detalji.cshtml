@@ -1,0 +1,31 @@
+@model KorisnickiInterfejs.Models.SortaViewModel
+<div class="page-title">Izmena i brisanje sorte</div>
+@using (Html.BeginForm("SnimiIzmenu", "Sorta", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.SifraPreuzete)
+    <table class="form-table">
+        <tr>
+            <td>Šifra</td>
+            <td>@Html.TextBoxFor(m => m.Sifra, new { id = "SifraTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Naziv</td>
+            <td>@Html.TextBoxFor(m => m.Naziv, new { id = "NazivTextBox" })</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <span class="status-label">@Model.Poruka</span>
+                <input type="submit" value="SNIMI IZMENU" />
+            </td>
+        </tr>
+    </table>
+}
+@using (Html.BeginForm("Obrisi", "Sorta", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.SifraPreuzete)
+    @Html.HiddenFor(m => m.Sifra)
+    @Html.HiddenFor(m => m.Naziv)
+    <input type="submit" value="OBRISI" />
+    @Html.ActionLink("NAZAD", "Izmena", "Sorta")
+}

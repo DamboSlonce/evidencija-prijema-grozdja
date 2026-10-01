@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<SpisakSorti>
+  <Sorta>
+    <Sifra>R</Sifra>
+    <Naziv>Rizling</Naziv>
+  </Sorta>
+    <Sorta>
+    <Sifra>T</Sifra>
+    <Naziv>Tamjanika</Naziv>
+  </Sorta>
+ <Sorta>
+    <Sifra>P</Sifra>
+    <Naziv>Prokupac</Naziv>
+  </Sorta>
+</SpisakSorti>

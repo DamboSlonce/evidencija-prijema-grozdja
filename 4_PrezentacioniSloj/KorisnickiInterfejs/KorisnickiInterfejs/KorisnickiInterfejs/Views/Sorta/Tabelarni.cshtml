@@ -1,0 +1,35 @@
+@using System.Data
+@{
+    DataTable tabela = ViewBag.Tabela as DataTable;
+    string filter = ViewBag.Filter as string ?? "";
+}
+<div class="page-title">Tabelarni prikaz sorti</div>
+<div class="toolbar">
+    @using (Html.BeginForm("Tabelarni", "Sorta", FormMethod.Post))
+    {
+        <text>Naziv</text>
+        <input type="text" name="Filter" value="@filter" />
+        <button type="submit" name="akcija" value="filtriraj">FILTRIRAJ</button>
+        <button type="submit" name="akcija" value="svi">SVI</button>
+    }
+</div>
+<table class="data-table" style="width:480px">
+    <thead>
+        <tr>
+            <th>Šifra</th>
+            <th>Naziv</th>
+        </tr>
+    </thead>
+    <tbody>
+@if (tabela != null)
+{
+    foreach (DataRow red in tabela.Rows)
+    {
+        <tr>
+            <td>@red["Sifra"]</td>
+            <td>@red["Naziv"]</td>
+        </tr>
+    }
+}
+    </tbody>
+</table>

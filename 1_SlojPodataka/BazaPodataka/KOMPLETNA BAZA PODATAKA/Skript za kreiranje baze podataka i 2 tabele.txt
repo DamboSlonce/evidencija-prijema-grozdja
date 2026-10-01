@@ -1,0 +1,107 @@
+USE [master]
+GO
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'VP2026Vinarija')
+BEGIN
+    ALTER DATABASE [VP2026Vinarija] SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+    DROP DATABASE [VP2026Vinarija]
+END
+GO
+
+CREATE DATABASE [VP2026Vinarija]
+GO
+
+USE [VP2026Vinarija]
+GO
+
+CREATE TABLE [dbo].[SORTA](
+	[Sifra] [nvarchar](3) NOT NULL,
+	[Naziv] [nvarchar](40) NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[SORTA]
+ADD CONSTRAINT [PK_SORTA] PRIMARY KEY CLUSTERED
+(
+	[Sifra] ASC
+)
+GO
+
+CREATE TABLE [dbo].[TURA](
+	[Oznaka] [nvarchar](10) NOT NULL,
+	[BrojPrijema] [nvarchar](20) NOT NULL,
+	[DatumPrijema] [date] NOT NULL,
+	[Isporucilac] [nvarchar](80) NOT NULL,
+	[SifraSorte] [nvarchar](3) NOT NULL,
+	[NetoMasaKg] [decimal](10, 2) NOT NULL,
+	[SecerProcenat] [decimal](5, 2) NOT NULL,
+	[KiselostGl] [decimal](5, 2) NOT NULL,
+	[TemperaturaC] [decimal](5, 2) NOT NULL,
+	[UdeoOstecenihProcenat] [decimal](5, 2) NOT NULL,
+	[Usmerenje] [nvarchar](30) NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[TURA]
+ADD CONSTRAINT [PK_TURA] PRIMARY KEY CLUSTERED
+(
+	[Oznaka] ASC
+)
+GO
+
+ALTER TABLE [dbo].[TURA] ADD CONSTRAINT
+[FK_Tura_Sorta] FOREIGN KEY([SifraSorte])
+REFERENCES [dbo].[SORTA] ([Sifra])
+ON UPDATE CASCADE
+GO
+
+CREATE TABLE [dbo].[Korisnik](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Prezime] [nvarchar](40) NOT NULL,
+	[Ime] [nvarchar](30) NOT NULL,
+	[KorisnickoIme] [nvarchar](20) NOT NULL,
+	[Sifra] [nvarchar](30) NOT NULL,
+	[Status] [nvarchar](10) NOT NULL
+)
+GO
+
+INSERT INTO [dbo].[SORTA] (Sifra, Naziv) VALUES (N'R', N'Rizling')
+INSERT INTO [dbo].[SORTA] (Sifra, Naziv) VALUES (N'T', N'Tamjanika')
+INSERT INTO [dbo].[SORTA] (Sifra, Naziv) VALUES (N'P', N'Prokupac')
+GO
+
+INSERT INTO [dbo].[Korisnik] (Prezime, Ime, KorisnickoIme, Sifra, Status)
+VALUES (N'sistema', N'Administrator', N'admin', N'admin', N'aktivan')
+GO
+
+CREATE TABLE [dbo].[PRIJEM](
+	[BrojPrijema] [nvarchar](20) NOT NULL,
+	[DatumPrijema] [date] NOT NULL,
+	[Isporucilac] [nvarchar](80) NOT NULL
+)
+GO
+
+ALTER TABLE [dbo].[PRIJEM]
+ADD CONSTRAINT [PK_PRIJEM] PRIMARY KEY CLUSTERED
+(
+	[BrojPrijema] ASC
+)
+GO
+
+INSERT INTO [dbo].[PRIJEM] (BrojPrijema, DatumPrijema, Isporucilac)
+VALUES (N'PG-2026-0148', '20260912', N'Petar Jovanović')
+GO
+
+INSERT INTO [dbo].[TURA]
+(Oznaka, BrojPrijema, DatumPrijema, Isporucilac, SifraSorte, NetoMasaKg, SecerProcenat, KiselostGl, TemperaturaC, UdeoOstecenihProcenat, Usmerenje)
+VALUES
+(N'T-01', N'PG-2026-0148', '20260912', N'Petar Jovanović', N'R', 1250.00, 21.40, 6.80, 22.00, 3.00, N'kvalitetno vino'),
+(N'T-02', N'PG-2026-0148', '20260912', N'Petar Jovanović', N'R', 980.00, 17.10, 8.20, 26.00, 12.00, N'destilat'),
+(N'T-03', N'PG-2026-0148', '20260912', N'Petar Jovanović', N'R', 1410.00, 20.00, 7.10, 23.00, 5.00, N'kvalitetno vino')
+GO
+
+ALTER TABLE [dbo].[TURA] ADD CONSTRAINT
+[FK_Tura_Prijem] FOREIGN KEY([BrojPrijema])
+REFERENCES [dbo].[PRIJEM] ([BrojPrijema])
+ON UPDATE CASCADE
+GO

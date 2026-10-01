@@ -1,0 +1,28 @@
+@model KorisnickiInterfejs.Models.PrijavaViewModel
+@{
+    Layout = "~/Views/Shared/_PrijavaIzgled.cshtml";
+}
+<div class="login-panel">
+    <div class="page-title">Prijava korisnika</div>
+    @using (Html.BeginForm("Index", "Prijava", FormMethod.Post, new { onsubmit = "return ProveriPrijavu();" }))
+    {
+        <table class="form-table">
+            <tr>
+                <td>Korisničko ime</td>
+                <td>@Html.TextBoxFor(m => m.KorisnickoIme, new { id = "KorisnickoImeTextBox", style = "width:220px" })</td>
+            </tr>
+            <tr>
+                <td>Šifra</td>
+                <td>@Html.PasswordFor(m => m.Sifra, new { id = "SifraTextBox", style = "width:220px" })</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <span class="status-label">@Model.Poruka</span>
+                    <input type="submit" value="PRIJAVA" />
+                    @Html.ActionLink("Odustani", "Index", "Prijava")
+                </td>
+            </tr>
+        </table>
+    }
+</div>

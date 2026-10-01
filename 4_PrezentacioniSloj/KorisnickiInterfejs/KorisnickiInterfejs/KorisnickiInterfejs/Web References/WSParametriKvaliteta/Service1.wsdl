@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="DajSvaOgranjcenja">
+        <s:complexType />
+      </s:element>
+      <s:element name="DajSvaOgranjcenjaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DajSvaOgranjcenjaResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DajMaxBrojNastavnika">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pomSifraZvanja" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DajMaxBrojNastavnikaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DajMaxBrojNastavnikaResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DajSvaOgranjcenjaSoapIn">
+    <wsdl:part name="parameters" element="tns:DajSvaOgranjcenja" />
+  </wsdl:message>
+  <wsdl:message name="DajSvaOgranjcenjaSoapOut">
+    <wsdl:part name="parameters" element="tns:DajSvaOgranjcenjaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajMaxBrojNastavnikaSoapIn">
+    <wsdl:part name="parameters" element="tns:DajMaxBrojNastavnika" />
+  </wsdl:message>
+  <wsdl:message name="DajMaxBrojNastavnikaSoapOut">
+    <wsdl:part name="parameters" element="tns:DajMaxBrojNastavnikaResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Service1Soap">
+    <wsdl:operation name="DajSvaOgranjcenja">
+      <wsdl:input message="tns:DajSvaOgranjcenjaSoapIn" />
+      <wsdl:output message="tns:DajSvaOgranjcenjaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajMaxBrojNastavnika">
+      <wsdl:input message="tns:DajMaxBrojNastavnikaSoapIn" />
+      <wsdl:output message="tns:DajMaxBrojNastavnikaSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Service1Soap" type="tns:Service1Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DajSvaOgranjcenja">
+      <soap:operation soapAction="http://tempuri.org/DajSvaOgranjcenja" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajMaxBrojNastavnika">
+      <soap:operation soapAction="http://tempuri.org/DajMaxBrojNastavnika" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Service1Soap12" type="tns:Service1Soap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DajSvaOgranjcenja">
+      <soap12:operation soapAction="http://tempuri.org/DajSvaOgranjcenja" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajMaxBrojNastavnika">
+      <soap12:operation soapAction="http://tempuri.org/DajMaxBrojNastavnika" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service1">
+    <wsdl:port name="Service1Soap" binding="tns:Service1Soap">
+      <soap:address location="http://localhost:1718/Service1.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Service1Soap12" binding="tns:Service1Soap12">
+      <soap12:address location="http://localhost:1718/Service1.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

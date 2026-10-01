@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="DajSvaOgranicenja">
+        <s:complexType />
+      </s:element>
+      <s:element name="DajSvaOgranicenjaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DajSvaOgranicenjaResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DajMinSecer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pomSifraSorte" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DajMinSecerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DajMinSecerResult" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DajMaxUdeoOstecenih">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pomSifraSorte" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DajMaxUdeoOstecenihResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DajMaxUdeoOstecenihResult" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DajSvaOgranicenjaSoapIn">
+    <wsdl:part name="parameters" element="tns:DajSvaOgranicenja" />
+  </wsdl:message>
+  <wsdl:message name="DajSvaOgranicenjaSoapOut">
+    <wsdl:part name="parameters" element="tns:DajSvaOgranicenjaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajMinSecerSoapIn">
+    <wsdl:part name="parameters" element="tns:DajMinSecer" />
+  </wsdl:message>
+  <wsdl:message name="DajMinSecerSoapOut">
+    <wsdl:part name="parameters" element="tns:DajMinSecerResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajMaxUdeoOstecenihSoapIn">
+    <wsdl:part name="parameters" element="tns:DajMaxUdeoOstecenih" />
+  </wsdl:message>
+  <wsdl:message name="DajMaxUdeoOstecenihSoapOut">
+    <wsdl:part name="parameters" element="tns:DajMaxUdeoOstecenihResponse" />
+  </wsdl:message>
+  <wsdl:portType name="OgranicenjaKvalitetaSoap">
+    <wsdl:operation name="DajSvaOgranicenja">
+      <wsdl:input message="tns:DajSvaOgranicenjaSoapIn" />
+      <wsdl:output message="tns:DajSvaOgranicenjaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajMinSecer">
+      <wsdl:input message="tns:DajMinSecerSoapIn" />
+      <wsdl:output message="tns:DajMinSecerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajMaxUdeoOstecenih">
+      <wsdl:input message="tns:DajMaxUdeoOstecenihSoapIn" />
+      <wsdl:output message="tns:DajMaxUdeoOstecenihSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OgranicenjaKvalitetaSoap" type="tns:OgranicenjaKvalitetaSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DajSvaOgranicenja">
+      <soap:operation soapAction="http://tempuri.org/DajSvaOgranicenja" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajMinSecer">
+      <soap:operation soapAction="http://tempuri.org/DajMinSecer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajMaxUdeoOstecenih">
+      <soap:operation soapAction="http://tempuri.org/DajMaxUdeoOstecenih" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="OgranicenjaKvalitetaSoap12" type="tns:OgranicenjaKvalitetaSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DajSvaOgranicenja">
+      <soap12:operation soapAction="http://tempuri.org/DajSvaOgranicenja" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajMinSecer">
+      <soap12:operation soapAction="http://tempuri.org/DajMinSecer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajMaxUdeoOstecenih">
+      <soap12:operation soapAction="http://tempuri.org/DajMaxUdeoOstecenih" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="OgranicenjaKvaliteta">
+    <wsdl:port name="OgranicenjaKvalitetaSoap" binding="tns:OgranicenjaKvalitetaSoap">
+      <soap:address location="http://localhost:1718/OgranicenjaKvaliteta.asmx" />
+    </wsdl:port>
+    <wsdl:port name="OgranicenjaKvalitetaSoap12" binding="tns:OgranicenjaKvalitetaSoap12">
+      <soap12:address location="http://localhost:1718/OgranicenjaKvaliteta.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

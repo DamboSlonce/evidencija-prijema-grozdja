@@ -1,0 +1,26 @@
+@using System.Data
+@{
+    Layout = "~/Views/Shared/_Stampa.cshtml";
+    DataTable tabela = ViewBag.Tabela as DataTable;
+}
+<div class="print-title">@ViewBag.Naslov</div>
+<table class="data-table" style="width:420px">
+    <thead>
+        <tr>
+            <th>Šifra</th>
+            <th>Naziv</th>
+        </tr>
+    </thead>
+    <tbody>
+@if (tabela != null)
+{
+    foreach (DataRow red in tabela.Rows)
+    {
+        <tr>
+            <td>@red["Sifra"]</td>
+            <td>@red["Naziv"]</td>
+        </tr>
+    }
+}
+    </tbody>
+</table>

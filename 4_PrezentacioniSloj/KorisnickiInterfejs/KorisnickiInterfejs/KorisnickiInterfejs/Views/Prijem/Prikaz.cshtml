@@ -1,0 +1,14 @@
+@model KorisnickiInterfejs.Models.PrijemUnosViewModel
+<div class="page-title">Master-detail prikaz prijema grožđa</div>
+<div class="toolbar">
+    @using (Html.BeginForm("Prikaz", "Prijem", FormMethod.Post))
+    {
+        <text>Prijem</text>
+        @Html.DropDownListFor(m => m.IzabraniBrojPrijema, (IEnumerable<SelectListItem>)ViewBag.Prijemi, new { style = "width:280px" })
+        <input type="submit" value="PRIKAZI TURE" />
+    }
+</div>
+@{
+    ViewBag.Tabela = ViewBag.Ture;
+}
+@Html.Partial("_TabelaTura")

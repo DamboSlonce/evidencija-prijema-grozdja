@@ -1,0 +1,59 @@
+@model KorisnickiInterfejs.Models.TuraUnosViewModel
+<div class="page-title">Unos ture — zapisnik o prijemu grožđa</div>
+@using (Html.BeginForm("Unos", "Tura", FormMethod.Post, new { onsubmit = "return ProveriUnosTure();" }))
+{
+    <table class="form-table">
+        <tr>
+            <td>Oznaka</td>
+            <td>@Html.TextBoxFor(m => m.Oznaka, new { id = "OznakaTextBox", maxlength = "10" })</td>
+        </tr>
+        <tr>
+            <td>Broj prijema</td>
+            <td>@Html.TextBoxFor(m => m.BrojPrijema, new { id = "BrojPrijemaTextBox", maxlength = "20" })</td>
+        </tr>
+        <tr>
+            <td>Datum prijema</td>
+            <td>@Html.TextBoxFor(m => m.DatumPrijema, new { id = "DatumPrijemaTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Isporučilac</td>
+            <td>@Html.TextBoxFor(m => m.Isporucilac, new { id = "IsporucilacTextBox", style = "width:233px" })</td>
+        </tr>
+        <tr>
+            <td>Sorta</td>
+            <td>@Html.DropDownListFor(m => m.NazivSorte, (IEnumerable<SelectListItem>)ViewBag.Sorte, new { id = "SortaDropDownList", style = "width:233px" })</td>
+        </tr>
+        <tr>
+            <td>Neto masa (kg)</td>
+            <td>@Html.TextBoxFor(m => m.NetoMasaKg, new { id = "NetoMasaKgTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Šećer (%)</td>
+            <td>@Html.TextBoxFor(m => m.SecerProcenat, new { id = "SecerProcenatTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Kiselost (g/l)</td>
+            <td>@Html.TextBoxFor(m => m.KiselostGl, new { id = "KiselostGlTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Temperatura (°C)</td>
+            <td>@Html.TextBoxFor(m => m.TemperaturaC, new { id = "TemperaturaCTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Udeo oštećenih (%)</td>
+            <td>@Html.TextBoxFor(m => m.UdeoOstecenihProcenat, new { id = "UdeoOstecenihProcenatTextBox" })</td>
+        </tr>
+        <tr>
+            <td>Usmerenje</td>
+            <td>@Html.DropDownListFor(m => m.Usmerenje, (IEnumerable<SelectListItem>)ViewBag.Usmerenja, new { id = "UsmerenjeDropDownList", style = "width:233px" })</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <span class="status-label">@Model.Poruka</span>
+                <input type="submit" value="SNIMI" />
+                @Html.ActionLink("PONISTI", "Unos", "Tura")
+            </td>
+        </tr>
+    </table>
+}

@@ -1,0 +1,31 @@
+## Build
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+
+## Visual Studio
+.vs/
+*.csproj.user
+*.cache
+*.dll
+*.pdb
+*.exe
+!packages/**/*.dll
+
+## Test artifacts
+_provera/*.exe
+_provera/*.dll
+_provera/*.pdb
+_provera/*.config
+_provera/setup-izlaz.txt
+_provera/Testovi.exe.config
+
+## OS
+Thumbs.db
+Desktop.ini
+.DS_Store
